@@ -81,6 +81,12 @@
   .error-msg.active{display:block}
   .dup-banner{display:none;padding:14px 20px;background:var(--orange-dim);border:1px solid var(--orange-border);border-radius:12px;font-size:13px;color:var(--orange);margin-bottom:16px;text-align:center}
   .dup-banner.active{display:block}
+  .loom-box{background:var(--surface-2);border:2px dashed var(--red-border);border-radius:16px;padding:28px 24px;margin-bottom:20px;text-align:center}
+  .loom-box h4{font-family:'Sora',sans-serif;color:var(--red);font-size:16px;margin-bottom:12px}
+  .loom-box p{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:8px}
+  .loom-box ol{text-align:left;margin:16px 0 0 20px;font-size:14px;color:var(--text-dim);line-height:2}
+  .loom-box ol strong{color:var(--text)}
+  .alert-tag{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--red-dim);border:1px solid var(--red-border);border-radius:10px;font-size:13px;color:var(--red);font-weight:600;margin-bottom:18px;line-height:1.5}
   @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -106,9 +112,9 @@
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-header">
       <span class="progress-label">Progreso</span>
-      <span class="progress-step" id="stepCounter">1 / 9</span>
+      <span class="progress-step" id="stepCounter">1 / 10</span>
     </div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:11.1%"></div></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:10%"></div></div>
   </div>
 
   <!-- ALREADY SUBMITTED -->
@@ -168,12 +174,35 @@
   <!-- STEP 8: Motivación -->
   <div class="step" id="step8">
     <div class="q-card">
-      <div class="q-number">Pregunta 08 — última</div>
+      <div class="q-number">Pregunta 08</div>
       <div class="q-title">¿Por qué te interesa este rol?</div>
       <div class="q-desc">Cuéntanos qué te motiva a postular como Asistente de IA en Aristeia Growth.</div>
       <textarea class="text-input" id="motivation" placeholder="Ej: Me apasiona la IA aplicada a negocios reales y quiero crecer en un equipo que está transformando clínicas en LATAM..." oninput="checkMotivation()"></textarea>
     </div>
-    <div class="btn-row"><button class="btn btn-ghost" onclick="goToStep(7)">←</button><button class="btn btn-primary" id="next8" disabled>Ver resultado →</button></div>
+    <div class="btn-row"><button class="btn btn-ghost" onclick="goToStep(7)">←</button><button class="btn btn-primary" id="next8" disabled>Continuar →</button></div>
+  </div>
+
+  <!-- STEP 9: LOOM obligatorio -->
+  <div class="step" id="step9">
+    <div class="q-card">
+      <div class="q-number">Paso final — obligatorio</div>
+      <div class="q-title">Envía tu video de Loom</div>
+      <div class="alert-tag">⚠️ Sin LOOM no serás considerado. Es obligatorio.</div>
+      <div class="loom-box">
+        <h4>LOOM de máximo 1 minuto</h4>
+        <p>Graba un video con cámara prendida respondiendo estas 3 preguntas:</p>
+        <ol>
+          <li><strong>¿Quién eres?</strong> — Tu nombre, de dónde eres, y a qué te dedicas hoy</li>
+          <li><strong>¿Qué experiencia tienes con IA y automatizaciones?</strong> — Herramientas que has usado, qué has armado, un ejemplo concreto</li>
+          <li><strong>¿Por qué te interesa este rol?</strong> — Qué te motiva de trabajar en el área de IA para clínicas estéticas en LATAM</li>
+        </ol>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Link de tu Loom *</label>
+        <input type="url" class="text-input" id="inp_loom" placeholder="https://www.loom.com/share/..." oninput="checkLoom()">
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn btn-ghost" onclick="goToStep(8)">←</button><button class="btn btn-primary" id="next9" disabled>Ver resultado →</button></div>
   </div>
 
   <!-- DQ -->
@@ -200,7 +229,7 @@
   <div class="dq-screen" id="submittedScreen">
     <div class="dq-icon pass">📨</div>
     <div class="dq-title pass">¡Postulación enviada!</div>
-    <p class="dq-msg">Recibimos tu información. Si avanzas en el proceso, te contactaremos por WhatsApp o email en los próximos días.</p>
+    <p class="dq-msg">Recibimos tu información y tu video. Si avanzas en el proceso, te contactaremos por WhatsApp o email en los próximos días.</p>
     <p class="dq-cta">Síguenos en <a href="#">@aristeiagrowth</a></p>
   </div>
 
@@ -215,7 +244,7 @@ var WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyPbqTZzKoe8HM5_Lejews
 // ============================================================
 
 var answers = {};
-var totalSteps = 9;
+var totalSteps = 10;
 var emailOk = false;
 var dqReasons = {
   1:'Requisito: tener entre 23 y 27 años',
@@ -293,7 +322,7 @@ document.querySelectorAll('.opt-btn').forEach(function(b){
 // ===== NAVIGATION =====
 document.getElementById('next0').addEventListener('click', function(){ if (emailOk) goToStep(1); });
 
-for (var i = 1; i <= 8; i++) {
+for (var i = 1; i <= 9; i++) {
   (function(idx){
     var btn = document.getElementById('next' + idx);
     if (btn) btn.addEventListener('click', function(){
@@ -302,7 +331,7 @@ for (var i = 1; i <= 8; i++) {
         showDQ(idx);
         return;
       }
-      if (idx === 8) { showPass(); return; }
+      if (idx === 9) { showPass(); return; }
       goToStep(idx + 1);
     });
   })(i);
@@ -322,6 +351,11 @@ function checkPrompt() {
 
 function checkMotivation() {
   document.getElementById('next8').disabled = document.getElementById('motivation').value.trim().length < 20;
+}
+
+function checkLoom() {
+  var v = document.getElementById('inp_loom').value.trim();
+  document.getElementById('next9').disabled = !(v.includes('loom.com') || v.includes('youtu') || v.includes('drive.google'));
 }
 
 function showDQ(step) {
@@ -360,7 +394,8 @@ function buildPayload(estado, razonDQ) {
     ingles: answers[5] ? answers[5].value : '',
     modalidad: answers[6] ? answers[6].value : '',
     prompt_caso: document.getElementById('prompt_answer') ? document.getElementById('prompt_answer').value.trim() : '',
-    motivacion: document.getElementById('motivation') ? document.getElementById('motivation').value.trim() : ''
+    motivacion: document.getElementById('motivation') ? document.getElementById('motivation').value.trim() : '',
+    loom_url: document.getElementById('inp_loom') ? document.getElementById('inp_loom').value.trim() : ''
   };
 }
 
